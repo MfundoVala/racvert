@@ -31,10 +31,10 @@ Route::delete('/delete_organisation/{user_id}', [OrganisationController::class, 
 Route::get('/organisations', [OrganisationController::class, 'getOrganisations']);
 });
 
+Route::post("add_organisation", [OrganisationController::class, "create"]);
 
 Route::middleware("auth:sanctum")->group(function () {
     Route::get("organisations", [OrganisationController::class, "getOrganisations"]);
-    Route::post("add_organisation", [OrganisationController::class, "create"]);
     Route::put("update_organisation/{id}", [OrganisationController::class, "update"]);
     Route::delete("delete_organisation/{id}", [OrganisationController::class, "delete"]);
 });

@@ -21,6 +21,8 @@ class UserController extends Controller
         $user = User::where('phone', $request->phone)
                     ->where('username', $request->username)
                     ->first();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
 
         if ($user) {
         // send otp
@@ -29,10 +31,9 @@ class UserController extends Controller
                 'status' => 'success',
                 'message' => 'User not active',
                 'user' => $user,
+                'token' => $token,
             ], 200);
         }
-        $token = $user->createToken('auth_token')->plainTextToken;
-
         // return response
         return response()->json([
             'status' => 'success',
@@ -42,7 +43,7 @@ class UserController extends Controller
         ]);
         }
 
-         return response()->json([
+        return response()->json([
                 'status' => 'error', 
                 'message' => 'User not found',
             ], 401);
