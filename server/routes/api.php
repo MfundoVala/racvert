@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrganisationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,7 +19,21 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+Route::middleware("auth:sanctum")->group(function () {
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
+Route::post('/logout', [UserController::class, 'logout']);
+Route::post('/add_organisation/{user_id}', [OrganisationController::class, 'create']);
+Route::put('/update_organisation/{user_id}', [OrganisationController::class, 'update']);
+Route::delete('/delete_organisation/{user_id}', [OrganisationController::class, 'delete']);
+Route::get('/organisations', [OrganisationController::class, 'getOrganisations']);
+});
+
+
+Route::middleware("auth:sanctum")->group(function () {
+    Route::get("organisations", [OrganisationController::class, "getOrganisations"]);
+    Route::post("add_organisation", [OrganisationController::class, "create"]);
+    Route::put("update_organisation/{id}", [OrganisationController::class, "update"]);
+    Route::delete("delete_organisation/{id}", [OrganisationController::class, "delete"]);
+});
 
