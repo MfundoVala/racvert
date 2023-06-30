@@ -1,0 +1,9 @@
+npm create vite@latest
+npm i && npm run dev
+
+npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
+npx tailwindcss init -p
+npm install -D @tailwindcss/forms
+
+npm i vue-router@4 -S
+npm i vuex@4 -S
