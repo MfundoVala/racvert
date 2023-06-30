@@ -28,6 +28,7 @@ class UserController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'User not active',
+                'user' => $user,
             ], 200);
         }
         $token = $user->createToken('auth_token')->plainTextToken;
