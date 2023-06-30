@@ -22,14 +22,14 @@ class UserController extends Controller
                     ->where('username', $request->username)
                     ->first();
 
-        if (!$user) {
-            return response()->json([
-                'status' => 'error', 
-                'message' => 'User not found',
-            ], 401);
-        }
-
+        if ($user) {
         // send otp
+        if (!$user->active) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User not active',
+            ], 200);
+        }
         $token = $user->createToken('auth_token')->plainTextToken;
 
         // return response
@@ -37,7 +37,16 @@ class UserController extends Controller
             'status' => 'success',
             'message' => 'User logged in successfully',
             'token' => $token,
+            'user' => $user,
         ]);
+        }
+
+         return response()->json([
+                'status' => 'error', 
+                'message' => 'User not found',
+            ], 401);
+
+
     }
 
     public function register(Request $request) {

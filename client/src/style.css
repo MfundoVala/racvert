@@ -5,3 +5,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  color: #000 !important;
+  font-size: 1rem;
+  font-weight: 400;
+  background-color: #ebf3ff;
+  -webkit-text-size-adjust: 100%;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  overflow-x: hidden;
+}
