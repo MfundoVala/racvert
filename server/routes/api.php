@@ -23,6 +23,8 @@ Route::middleware("auth:sanctum")->group(function () {
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/logout', [UserController::class, 'logout']);
+Route::get('/update', [UserController::class, 'updateProfile']);
+Route::get('/user', [UserController::class, 'getProfile']);
 Route::post('/add_organisation/{user_id}', [OrganisationController::class, 'create']);
 Route::put('/update_organisation/{user_id}', [OrganisationController::class, 'update']);
 Route::delete('/delete_organisation/{user_id}', [OrganisationController::class, 'delete']);
