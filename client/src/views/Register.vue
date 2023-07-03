@@ -3,23 +3,41 @@ import axios from "axios";
 import { ref } from "vue";
 import store from "../store";
 import router from "../router";
+import { protectRoute } from "../helpers";
+
+protectRoute();
 
 const username = ref("");
 const phone = ref("");
 const accept_terms = ref(false);
 
 const register = () => {
-  const response = axios.post("/api/register", {
-    username: username.value,
-    phone: phone.value,
-  });
-
-  if (response.data.success == "ok") {
-    store.commit("setUser", response.data.user);
-    router.push("/");
-  } else {
-    alert(response.data.message);
-  }
+  axios
+    .post("http://127.0.0.1:8000/api/register", {
+      username: username.value,
+      phone: phone.value,
+    })
+    .then((response) => {
+      console.log(response);
+      if (response.status == 200) {
+        store.commit("setUser", response.data.user);
+        console.log("user", store.state.user);
+        localStorage.setItem("token", response.data.token);
+        if (response.data.user.active == 1) {
+          console.log("active");
+          location.href = "/";
+        } else {
+          console.log("not active");
+          console.log(response.data.user.active);
+          location.href = "/registerbusiness";
+        }
+      } else {
+        alert(response.data.message);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 </script>
 

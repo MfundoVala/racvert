@@ -1,21 +1,42 @@
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import store from "../store";
+import router from "../router";
+import { protectRoute } from "../helpers";
+
+protectRoute(store.state.user, router);
+console.log(store.state.user);
 
 const username = ref("");
 const phone = ref("");
 
 const login = () => {
   axios
-    .post("/api/login", {
+    .post("http://127.0.0.1:8000/api/login", {
       username: username.value,
       phone: phone.value,
     })
     .then((response) => {
-      console.log(response);
-      // localStorage.setItem("token", response.data.data.token);
-      // console.log(localStorage.getItem("token"));
-      // location.href = "/";
+      if (response.status == 200) {
+        store.commit("setUser", {
+          id: response.data.user.id,
+          username: response.data.user.username,
+          phone: response.data.user.phone,
+          active: response.data.user.active,
+          token: response.data.token,
+        });
+
+        console.log("user", store.state.user);
+
+        if (response.data.user.active == 1) {
+          router.push({ name: "Home" });
+        } else {
+          router.push({ name: "RegisterBusiness" });
+        }
+      } else {
+        alert(response.data.message);
+      }
     })
     .catch((error) => {
       console.log(error);
@@ -32,7 +53,7 @@ const login = () => {
         <div class="bg-white shadow-sm p-6">
           <div class="font-semibold text-lg mb-4">Login</div>
 
-          <form method="POST" @submit="login">
+          <form @submit.prevent="login">
             <div class="mb-3">
               <label for="email" class="block text-left mb-1">Username</label>
 
@@ -41,10 +62,8 @@ const login = () => {
                 name="email"
                 v-model="username"
                 required
-                autocomplete="email"
                 autofocus
               />
-              
             </div>
 
             <div class="mb-3">

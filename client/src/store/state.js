@@ -1,5 +1,5 @@
 export default {
-  user: null,
-  token: null,
+  user: {},
+  token: {},
   organisations: [],
 };
