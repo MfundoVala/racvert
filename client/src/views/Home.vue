@@ -3,7 +3,7 @@ import store from "../store";
 import router from "../router";
 import { protectRoute } from "../helpers";
 import { ref } from "vue";
-import { IMAGES } from "../assets";
+import { IMAGES, baseUrl } from "../assets";
 
 const authUser = store.state.user;
 protectRoute(authUser, router);
@@ -12,7 +12,7 @@ const org = ref(null);
 
 const getUsers = async () => {
   console.log(authUser.token);
-  const response = await fetch("http://localhost:8000/api/users", {
+  const response = await fetch(baseUrl + "api/users", {
     method: "GET",
     headers: {
       Authorization: `Bearer ${authUser.token}`,
@@ -24,18 +24,16 @@ const getUsers = async () => {
 };
 
 const getOrg = async () => {
-  const response = await fetch(
-    `http://localhost:8000/api/organisations/${authUser.id}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${authUser.token}`,
-      },
-    }
-  );
+  const response = await fetch(`${baseUrl}api/organisations/${authUser.id}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${authUser.token}`,
+    },
+  });
   const data = await response.json();
   console.log(data.organisation);
   org.value = data.organisation;
+  org.value.logo_url = "images/" + data.organisation.logo_url;
 };
 
 getUsers();
@@ -48,7 +46,7 @@ getOrg();
     <h2 class="text-xl font-bold">Your Organisation</h2>
     <v-card class="bg-white rounded-lg shadow-md p-4 w-64 cursor-pointer">
       <img
-        :src="org.logo_url ? org.logo_url : IMAGES.orgPlaceholder"
+        :src="org.logo_url ? baseUrl + org.logo_url : IMAGES.orgPlaceholder"
         class="w-32 h-32 rounded-full mx-auto mb-4"
       />
       <h3 class="text-xl font-semibold text-center">{{ org.name }}</h3>
@@ -76,5 +74,11 @@ getOrg();
         </tr>
       </tbody>
     </table>
+    <button
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-56"
+      @click="router.push({ name: 'CreateUser' })"
+    >
+      Create User
+    </button>
   </div>
 </template>
