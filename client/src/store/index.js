@@ -11,7 +11,7 @@ const store = createStore({
   state,
   getters,
   modules: {},
-  plugins: [createPersistedState({ paths: ["user"]})],
+  plugins: [createPersistedState({ paths: ["user", "organisation"] })],
 });
 
 export default store;

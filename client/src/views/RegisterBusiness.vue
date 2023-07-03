@@ -1,15 +1,17 @@
 <script setup>
 import axios from "axios";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import store from "../store";
 import router from "../router";
 import { protectRoute } from "../helpers";
 
 const user = store.state.user;
+store.dispatch("getUserById", user);
+console.log(user);
 protectRoute(user, router);
 
 const business_name = ref("");
-const user_id = ref();
+const user_id = ref("");
 const accept_terms = ref(false);
 const logo_url = ref(null);
 
@@ -19,34 +21,34 @@ const handleFileUpload = (e) => {
 };
 
 const registerBusiness = () => {
-  const token = localStorage.getItem("token");
+  const token = user.token;
 
   const formData = new FormData();
   formData.append("name", business_name.value);
   formData.append("creator_id", user.id);
   formData.append("logo_url", logo_url.value);
-  formData.append("accept_terms", accept_terms.value);
+  // formData.append("accept_terms", accept_terms.value);
 
-  const response = axios.post(
-    "http://127.0.0.1:8000/api/add_organisation",
-    formData,
-    {
+  const response = axios
+    .post("http://127.0.0.1:8000/api/add_organisation", formData, {
       headers: {
         contentType: "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
-    }
-  );
-  console.log(response);
-  try {
-    if (response.data.status == 200) {
-      router.push({ name: "Home" });
-    } else {
-      alert(response.data.message);
-    }
-  } catch (error) {
-    alert(response.data.message);
-  }
+    })
+    .then((res) => {
+      if (res.status === 200) {
+        console.log(res.data);
+        router.push({ name: "Home" });
+      } else {
+        console.log(res.data);
+        alert("Something went wrong");
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      alert("Something went wrong");
+    });
 };
 </script>
 

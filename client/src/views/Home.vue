@@ -6,6 +6,7 @@ import { ref } from "vue";
 import { IMAGES, baseUrl } from "../assets";
 
 const authUser = store.state.user;
+console.log(authUser);
 protectRoute(authUser, router);
 const users = ref(null);
 const org = ref(null);
@@ -44,14 +45,18 @@ getOrg();
   <div class="flex p-8 flex-col justify-start gap-4">
     <h1 class="text-2xl font-bold mb-8">Hello {{ authUser.username }}</h1>
     <h2 class="text-xl font-bold">Your Organisation</h2>
-    <v-card class="bg-white rounded-lg shadow-md p-4 w-64 cursor-pointer">
+    <div
+      v-if="org"
+      class="bg-white rounded-lg shadow-md p-4 w-64 cursor-pointer"
+    >
       <img
         :src="org.logo_url ? baseUrl + org.logo_url : IMAGES.orgPlaceholder"
         class="w-32 h-32 rounded-full mx-auto mb-4"
       />
-      <h3 class="text-xl font-semibold text-center">{{ org.name }}</h3>
-      <p class="text-center">{{ org.description }}</p>
-    </v-card>
+      <h3 class="text-xl font-semibold text-center">
+        {{ org.name ?? "Add organisation" }}
+      </h3>
+    </div>
 
     <h2 class="text-xl font-bold">Users</h2>
     <table class="table-auto rounded bg-white">
@@ -73,7 +78,15 @@ getOrg();
           </td>
         </tr>
       </tbody>
+      <tbody v-else>
+        <tr>
+          <td class="border px-4 py-2 text-center" colspan="4">
+            No users found
+          </td>
+        </tr>
+      </tbody>
     </table>
+
     <button
       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-56"
       @click="router.push({ name: 'CreateUser' })"

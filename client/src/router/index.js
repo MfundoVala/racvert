@@ -3,6 +3,7 @@ import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import RegisterBusiness from "../views/RegisterBusiness.vue";
+import CreateUser from "../views/CreateUser.vue";
 
 const routes = [
   {
@@ -28,6 +29,11 @@ const routes = [
     name: "RegisterBusiness",
     component: RegisterBusiness,
     meta: { showNav: false },
+  },
+  {
+    path: "/create_user",
+    name: "CreateUser",
+    component: CreateUser,
   },
 ];
 
